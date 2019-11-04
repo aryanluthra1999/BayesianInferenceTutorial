@@ -16,6 +16,7 @@ import itertools
 import random
 import busters
 import game
+import numpy as np
 
 from util import manhattanDistance, raiseNotDefined
 
@@ -75,7 +76,12 @@ class DiscreteDistribution(dict):
         {}
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        tot = sum([self.get(k) for k in self.keys()])
+
+        for k in self.keys():
+            self.__setitem__(k, self.get(k)/tot)
+
+
 
     def sample(self):
         """
@@ -99,7 +105,24 @@ class DiscreteDistribution(dict):
         0.0
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        self.normalize()
+
+        keys_arr = [k for k in self.keys()]
+        items_arr = np.array([self.get(k) for k in keys_arr])
+        cum_sum = np.cumsum(items_arr)
+
+        r = random.random()
+
+        ctr = 0
+        for i in range(len(items_arr)):
+            if r > cum_sum[i]:
+                ctr += 1
+            else:
+                break
+
+
+        return keys_arr[ctr]
+
 
 
 class InferenceModule:
