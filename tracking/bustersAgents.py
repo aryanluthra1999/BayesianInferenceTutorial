@@ -18,6 +18,7 @@ from game import Directions
 from keyboardAgents import KeyboardAgent
 import inference
 import busters
+import numpy as np
 
 class NullGraphics:
     "Placeholder for graphics"
@@ -104,6 +105,9 @@ class BustersAgent:
 
     def chooseAction(self, gameState):
         "By default, a BustersAgent just stops.  This should be overridden."
+
+
+
         return Directions.STOP
 
 class BustersKeyboardAgent(BustersAgent, KeyboardAgent):
@@ -140,7 +144,15 @@ class GreedyBustersAgent(BustersAgent):
         pacmanPosition = gameState.getPacmanPosition()
         legal = [a for a in gameState.getLegalPacmanActions()]
         livingGhosts = gameState.getLivingGhosts()
-        livingGhostPositionDistributions = \
-            [beliefs for i, beliefs in enumerate(self.ghostBeliefs)
-             if livingGhosts[i+1]]
+        livingGhostPositionDistributions = [beliefs for i, beliefs in enumerate(self.ghostBeliefs) if livingGhosts[i+1]]
         "*** YOUR CODE HERE ***"
+        max_prob_locations = [max(beliefs.keys(), key = lambda x: beliefs[x]) for beliefs in livingGhostPositionDistributions]
+        closest_ghost_loc_index = np.argmin([self.distancer.getDistance(pacmanPosition, pos) for pos in max_prob_locations])
+
+        closest_ghost_loc = max_prob_locations[closest_ghost_loc_index]
+
+
+        new_gs = [self.distancer.getDistance(Actions.getSuccessor(pacmanPosition, a), closest_ghost_loc) for a in legal]
+        result = legal[np.argmin(new_gs)]
+
+        return result
