@@ -76,7 +76,13 @@ class DiscreteDistribution(dict):
         {}
         """
         "*** YOUR CODE HERE ***"
-        tot = sum([self.get(k) for k in self.keys()])
+        tot = sum([abs(self.get(k))for k in self.keys()])
+
+        if tot < 0:
+            tot = -tot
+        elif tot == 0:
+            tot = 1
+
 
         for k in self.keys():
             self.__setitem__(k, self.get(k)/tot)
@@ -322,9 +328,16 @@ class ExactInference(InferenceModule):
         "*** YOUR CODE HERE ***"
 
         self.beliefs.normalize()
-        
 
-        return
+        for pos in self.allPositions:
+            self.beliefs[pos] = self.beliefs[pos] * self.getObservationProb(
+                noisyDistance=observation,
+                pacmanPosition=gameState.getPacmanPosition(),
+                ghostPosition=pos,
+                jailPosition=self.getJailPosition()
+            )
+        self.beliefs.normalize()
+
 
     def elapseTime(self, gameState):
         """
