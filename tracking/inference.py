@@ -509,10 +509,24 @@ class JointParticleFilter(ParticleFilter):
         self.particles = []
         "*** YOUR CODE HERE ***"
 
-        ghost_particles = []
-        for i in range():
-            curr = [pos for pos in self.legalPositions]
-            ghost_particles.append(curr)
+        particles = []
+
+        legal = self.legalPositions
+
+        num_legal = len(legal)
+
+        num_per_legal = self.numParticles // num_legal
+
+
+        for pos in legal:
+            particles.extend([pos for _ in range(num_per_legal)])
+
+        result = list(product(particles, repeat=self.numGhosts))
+
+        random.shuffle(result)
+
+        self.particles = result
+
 
 
 
@@ -547,7 +561,7 @@ class JointParticleFilter(ParticleFilter):
         the DiscreteDistribution may be useful.
         """
         "*** YOUR CODE HERE ***"
-
+        return
 
 
 
