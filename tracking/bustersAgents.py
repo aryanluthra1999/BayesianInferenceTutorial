@@ -151,7 +151,6 @@ class GreedyBustersAgent(BustersAgent):
 
         closest_ghost_loc = max_prob_locations[closest_ghost_loc_index]
 
-
         new_gs = [self.distancer.getDistance(Actions.getSuccessor(pacmanPosition, a), closest_ghost_loc) for a in legal]
         result = legal[np.argmin(new_gs)]
 
