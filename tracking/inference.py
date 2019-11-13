@@ -412,7 +412,36 @@ class ParticleFilter(InferenceModule):
         the DiscreteDistribution may be useful.
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+
+        result = DiscreteDistribution()
+
+        for part in self.particles:
+            curr = 1/self.numParticles * self.getObservationProb(
+                observation,
+                gameState.getPacmanPosition(),
+                part,
+                self.getJailPosition()
+            )
+
+            if part in self.particles:
+                result[part] += curr
+            else:
+                result[part] = curr
+
+
+        if result.total() == 0:
+            self.initializeUniformly(gameState)
+            return
+
+        result.normalize()
+
+
+        new_parts = []
+        for i in range(self.numParticles):
+            new_parts.append(result.sample())
+
+        self.particles = new_parts
+
 
     def elapseTime(self, gameState):
         """
@@ -562,3 +591,10 @@ class MarginalInference(InferenceModule):
         for t, prob in jointDistribution.items():
             dist[t[self.index - 1]] += prob
         return dist
+
+def normalize(weights):
+    n = np.linalg.norm(weights)
+    if n != 0:
+        return np.array(weights)/n
+    else:
+        return weights
