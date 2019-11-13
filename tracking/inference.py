@@ -566,22 +566,20 @@ class JointParticleFilter(ParticleFilter):
 
         for part in self.particles:
 
+            weight = 1
+            for i in range(self.numGhosts):
+                weight *= self.getObservationProb(
+                    observation[i],
+                    gameState.getPacmanPosition(),
+                    part[i],
+                    self.getJailPosition(i)
+                )
 
-            
-            weight = [self.getObservationProb(observation[i],
-                                              gameState.getPacmanPosition(),
-                                              part[i],
-                                              self.getJailPosition(i)
-                                              ) for i in range(self.numGhosts)]
-
-            weight = np.prod(weight)
-
-            curr = 1 / self.numParticles * weight
 
             if part in self.particles:
-                result[part] += curr
+                result[part] += weight
             else:
-                result[part] = curr
+                result[part] = weight
 
         if result.total() == 0:
             self.initializeUniformly(gameState)
