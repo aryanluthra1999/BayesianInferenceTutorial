@@ -488,7 +488,7 @@ class JointParticleFilter(ParticleFilter):
     JointParticleFilter tracks a joint distribution over tuples of all ghost
     positions.
     """
-    def __init__(self, numParticles=600):
+    def __init__(self, numParticles=60):
         self.setNumParticles(numParticles)
 
     def initialize(self, gameState, legalPositions):
@@ -526,9 +526,6 @@ class JointParticleFilter(ParticleFilter):
         random.shuffle(result)
 
         self.particles = result
-
-
-
 
     def addGhostAgent(self, agent):
         """
@@ -593,9 +590,6 @@ class JointParticleFilter(ParticleFilter):
 
         self.particles = new_parts
 
-
-
-
     def elapseTime(self, gameState):
         """
         Sample each particle's next state based on its current state and the
@@ -607,7 +601,9 @@ class JointParticleFilter(ParticleFilter):
 
             # now loop through and update each entry in newParticle...
             "*** YOUR CODE HERE ***"
-            raiseNotDefined()
+            for i in range(len(oldParticle)):
+                newPosDist = self.getPositionDistribution(gameState, oldParticle, i, self.ghostAgents[i])
+                newParticle[i] = newPosDist.sample()
 
             """*** END YOUR CODE HERE ***"""
             newParticles.append(tuple(newParticle))
