@@ -13,6 +13,7 @@
 
 
 import itertools
+from itertools import product
 import random
 import busters
 import game
@@ -449,7 +450,17 @@ class ParticleFilter(InferenceModule):
         gameState.
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+
+        result = []
+
+        for part in self.particles:
+
+            newPosDist = self.getPositionDistribution(gameState, part)
+
+            result.append(newPosDist.sample())
+
+        self.particles = result
+
 
     def getBeliefDistribution(self):
         """
@@ -497,7 +508,13 @@ class JointParticleFilter(ParticleFilter):
         """
         self.particles = []
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+
+        ghost_particles = []
+        for i in range():
+            curr = [pos for pos in self.legalPositions]
+            ghost_particles.append(curr)
+
+
 
     def addGhostAgent(self, agent):
         """
@@ -530,7 +547,10 @@ class JointParticleFilter(ParticleFilter):
         the DiscreteDistribution may be useful.
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+
+
+
+
 
     def elapseTime(self, gameState):
         """
