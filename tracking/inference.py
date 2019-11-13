@@ -515,7 +515,7 @@ class JointParticleFilter(ParticleFilter):
 
         num_legal = len(legal)
 
-        num_per_legal = self.numParticles // num_legal
+        num_per_legal = (self.numParticles // num_legal)//self.numGhosts
 
 
         for pos in legal:
@@ -561,7 +561,39 @@ class JointParticleFilter(ParticleFilter):
         the DiscreteDistribution may be useful.
         """
         "*** YOUR CODE HERE ***"
-        return
+
+        result = DiscreteDistribution()
+
+        for part in self.particles:
+
+
+            
+            weight = [self.getObservationProb(observation[i],
+                                              gameState.getPacmanPosition(),
+                                              part[i],
+                                              self.getJailPosition(i)
+                                              ) for i in range(self.numGhosts)]
+
+            weight = np.prod(weight)
+
+            curr = 1 / self.numParticles * weight
+
+            if part in self.particles:
+                result[part] += curr
+            else:
+                result[part] = curr
+
+        if result.total() == 0:
+            self.initializeUniformly(gameState)
+            return
+
+        result.normalize()
+
+        new_parts = []
+        for i in range(self.numParticles):
+            new_parts.append(result.sample())
+
+        self.particles = new_parts
 
 
 
