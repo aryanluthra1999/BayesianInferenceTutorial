@@ -520,6 +520,8 @@ class JointParticleFilter(ParticleFilter):
                 if ctr < self.numParticles:
                     result.append(p)
                     ctr += 1
+                else:
+                    break
 
         self.particles = result
 
