@@ -509,21 +509,17 @@ class JointParticleFilter(ParticleFilter):
         self.particles = []
         "*** YOUR CODE HERE ***"
 
-        particles = []
+        all_possible = list(itertools.product(self.legalPositions, repeat=self.numGhosts))
 
-        legal = self.legalPositions
+        ctr = 0
+        result = []
+        random.shuffle(all_possible)
 
-        num_legal = len(legal)
-
-        num_per_legal = int((self.numParticles / num_legal)**(1/self.numGhosts))
-
-
-        for pos in legal:
-            particles.extend([pos for _ in range(num_per_legal)])
-
-        result = list(product(particles, repeat=self.numGhosts))
-
-        random.shuffle(result)
+        while ctr < self.numParticles:
+            for p in all_possible:
+                if ctr < self.numParticles:
+                    result.append(p)
+                    ctr += 1
 
         self.particles = result
 
