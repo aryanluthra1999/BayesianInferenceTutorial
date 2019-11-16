@@ -515,7 +515,7 @@ class JointParticleFilter(ParticleFilter):
 
         num_legal = len(legal)
 
-        num_per_legal = (self.numParticles // num_legal)//self.numGhosts
+        num_per_legal = int((self.numParticles / num_legal)**(1/self.numGhosts))
 
 
         for pos in legal:
